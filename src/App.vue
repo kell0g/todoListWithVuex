@@ -1,19 +1,19 @@
 <template>
   <div class="container">
-    <AddItem />
-    <Item />
+    <AddTask />
+    <Task />
   </div>
 </template>
 
 <script>
-import AddItem from "../src/components/AddItem";
-import Item from "../src/components/Item";
+import AddTask from "../src/components/AddTask";
+import Task from "../src/components/Task";
 
 export default {
   name: "App",
   components: {
-    Item,
-    AddItem,
+    AddTask,
+    Task,
   },
 };
 </script>

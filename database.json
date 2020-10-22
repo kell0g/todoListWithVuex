@@ -1,20 +1,16 @@
 {
   "todoList": [
     {
-      "id": 1,
-      "item": "숨쉬기"
+      "description": "밥먹기",
+      "id": 1
     },
     {
-      "id": 2,
-      "item": "밥 먹기"
+      "description": "숨쉬기",
+      "id": 2
     },
     {
-      "id": 3,
-      "item": "자기"
-    },
-    {
-      "id": 4,
-      "item": "공부하기"
+      "description": "자기",
+      "id": 3
     }
   ]
 }

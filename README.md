@@ -14,20 +14,16 @@ npm install -g json-server
 {
   "todoList": [
     {
-      "id": 1,
-      "item": "숨쉬기"
+      "description": "밥먹기",
+      "id": 1
     },
     {
-      "id": 2,
-      "item": "밥 먹기"
+      "description": "숨쉬기",
+      "id": 2
     },
     {
-      "id": 3,
-      "item": "자기"
-    },
-    {
-      "id": 4,
-      "item": "공부하기"
+      "description": "자기",
+      "id": 3
     }
   ]
 }
@@ -67,33 +63,33 @@ export default new Vuex.Store({
 import axios from "axios";
 
 const state = {
-  items: [],
+  tasks: [],
 };
 
 const getters = {
-  todoList: (state) => state.items,
+  todoList: (state) => state.tasks,
 };
 
 const actions = {
-  async fetchItems({ commit }) {
+  async fetchTasks({ commit }) {
     const response = await axios.get("http://localhost:3000/todoList");
     commit("setList", response.data);
   },
-  async addItem({ commit }, item) {
-    const response = await axios.post("http://localhost:3000/todoList", item);
-    commit("addNewItem", response.data);
+  async addTask({ commit }, task) {
+    const response = await axios.post("http://localhost:3000/todoList", task);
+    commit("addNewTask", response.data);
   },
-  async deleteItem({ commit, dispatch }, id) {
+  async deleteTask({ commit, dispatch }, id) {
     await axios.delete(`http://localhost:3000/todoList/${id}`);
-    commit("removeItem", id);
-    dispatch("fetchItems");
+    commit("removeTask", id);
+    dispatch("fetchTasks");
   },
 };
 
 const mutations = {
-  setList: (state, items) => (state.items = items),
-  addNewItem: (state, newItem) => state.items.unshift(newItem),
-  removeItem: (state, id) => state.items.filter((item) => item.id !== id),
+  setList: (state, tasks) => (state.tasks = tasks),
+  addNewTask: (state, newTask) => state.tasks.unshift(newTask),
+  removeTask: (state, id) => state.tasks.filter((task) => task.id !== id),
 };
 
 export default {
@@ -117,8 +113,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "User",
-    component: () => import("../components/Users"),
+    name: "Task",
+    component: () => import("../components/Task"),
   },
 ];
 
@@ -138,39 +134,40 @@ export default router;
 ```js
 <template>
   <div class="container">
-    <AddUser />
-    <Users />
+    <AddTask />
+    <Task />
   </div>
 </template>
 
 <script>
-import AddUser from "../src/components/AddUser";
-import Users from "../src/components/Users";
+import AddTask from "../src/components/AddTask";
+import Task from "../src/components/Task";
+
 export default {
   name: "App",
   components: {
-    AddUser,
-    Users
-  }
+    AddTask,
+    Task,
+  },
 };
 </script>
 
 <style>
 .container {
-  max-width: 1200px;
-  padding-top: 100px;
+  max-width: 500px;
+  padding-top: 50px;
 }
 </style>
 ```
 
-- AddUser.vue
+- AddTask.vue
 
 ```js
 <template>
   <!-- 페이지 리로드를 막기 위해서 prevent 넣어주어야 함, 빼면 페이지 새로고침 됨 -->
   <form @submit.prevent="onItemSubmit">
     <div class="form-group">
-      <input type="text" class="form-control" v-model="item" />
+      <input type="text" class="form-control" v-model="description" />
     </div>
     <button type="submit" class="btn btn-block btn-dark">할 일 추가</button>
   </form>
@@ -183,31 +180,37 @@ export default {
   name: "AddItem",
   data() {
     return {
-      item: ""
+      description: "",
     };
   },
   methods: {
-    ...mapActions(["addItem"]),
+    ...mapActions(["addTask"]),
     onItemSubmit() {
-      this.addItem({
-        item: this.item
-      }).then((this.item = ""));
-    }
-  }
+      this.addTask({
+        description: this.description,
+      }).then((this.description = ""));
+    },
+  },
 };
 </script>
 ```
 
-- Item.vue
+- Task.vue
 
 ```js
 <template>
   <div>
     <ul class="list-group mt-5">
-      <li class="list-group-item list-group-item-action" v-for="item in todoList" :key="item.id">
+      <li
+        class="list-group-item list-group-item-action"
+        v-for="task in todoList"
+        :key="task.id"
+      >
         <div class="d-flex w-100 justify-content-between">
-          <h3>{{ item.item }}</h3>
-          <small class="text-danger delete" @click="deleteItem(item.id)">삭제</small>
+          <h3>{{ task.description }}</h3>
+          <small class="text-danger delete" @click="deleteTask(task.id)"
+            >삭제</small
+          >
         </div>
       </li>
     </ul>
@@ -218,14 +221,14 @@ export default {
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "Item",
+  name: "Task",
   methods: {
-    ...mapActions(["fetchItems", "deleteItem"])
+    ...mapActions(["fetchTasks", "deleteTask"]),
   },
   computed: mapGetters(["todoList"]),
   created() {
-    this.fetchItems();
-  }
+    this.fetchTasks();
+  },
 };
 </script>
 

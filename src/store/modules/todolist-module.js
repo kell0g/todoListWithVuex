@@ -1,33 +1,33 @@
 import axios from "axios";
 
 const state = {
-  items: [],
+  tasks: [],
 };
 
 const getters = {
-  todoList: (state) => state.items,
+  todoList: (state) => state.tasks,
 };
 
 const actions = {
-  async fetchItems({ commit }) {
+  async fetchTasks({ commit }) {
     const response = await axios.get("http://localhost:3000/todoList");
     commit("setList", response.data);
   },
-  async addItem({ commit }, item) {
-    const response = await axios.post("http://localhost:3000/todoList", item);
-    commit("addNewItem", response.data);
+  async addTask({ commit }, task) {
+    const response = await axios.post("http://localhost:3000/todoList", task);
+    commit("addNewTask", response.data);
   },
-  async deleteItem({ commit, dispatch }, id) {
+  async deleteTask({ commit, dispatch }, id) {
     await axios.delete(`http://localhost:3000/todoList/${id}`);
-    commit("removeItem", id);
-    dispatch("fetchItems");
+    commit("removeTask", id);
+    dispatch("fetchTasks");
   },
 };
 
 const mutations = {
-  setList: (state, items) => (state.items = items),
-  addNewItem: (state, newItem) => state.items.unshift(newItem),
-  removeItem: (state, id) => state.items.filter((item) => item.id !== id),
+  setList: (state, tasks) => (state.tasks = tasks),
+  addNewTask: (state, newTask) => state.tasks.unshift(newTask),
+  removeTask: (state, id) => state.tasks.filter((task) => task.id !== id),
 };
 
 export default {

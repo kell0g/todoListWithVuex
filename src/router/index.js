@@ -6,8 +6,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Item",
-    component: () => import("../components/Item"),
+    name: "Task",
+    component: () => import("../components/Task"),
   },
 ];
 

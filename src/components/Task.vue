@@ -3,12 +3,12 @@
     <ul class="list-group mt-5">
       <li
         class="list-group-item list-group-item-action"
-        v-for="item in todoList"
-        :key="item.id"
+        v-for="task in todoList"
+        :key="task.id"
       >
         <div class="d-flex w-100 justify-content-between">
-          <h3>{{ item.item }}</h3>
-          <small class="text-danger delete" @click="deleteItem(item.id)"
+          <h3>{{ task.description }}</h3>
+          <small class="text-danger delete" @click="deleteTask(task.id)"
             >삭제</small
           >
         </div>
@@ -21,13 +21,13 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "Item",
+  name: "Task",
   methods: {
-    ...mapActions(["fetchItems", "deleteItem"]),
+    ...mapActions(["fetchTasks", "deleteTask"]),
   },
   computed: mapGetters(["todoList"]),
   created() {
-    this.fetchItems();
+    this.fetchTasks();
   },
 };
 </script>
