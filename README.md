@@ -1,40 +1,5 @@
 # TODOLIST
 
-## Pre-requirements
-
-- 간단한 JSON 응답을 위한 설치
-
-```bash
-npm install -g json-server
-```
-
-- json-server 에서 사용할 json 파일 생성(database.json)
-
-```json
-{
-  "todoList": [
-    {
-      "description": "밥먹기",
-      "id": 1
-    },
-    {
-      "description": "숨쉬기",
-      "id": 2
-    },
-    {
-      "description": "자기",
-      "id": 3
-    }
-  ]
-}
-```
-
-- json-server 기동
-
-```bash
-json-server --watch database.json
-```
-
 ## Vuex 생성
 
 - store/index.js 파일 생성
@@ -72,24 +37,21 @@ const getters = {
 
 const actions = {
   async fetchTasks({ commit }) {
-    const response = await axios.get("http://localhost:3000/todoList");
+    const response = await axios.get("http://localhost:3000/tasks");
     commit("setList", response.data);
   },
-  async addTask({ commit }, task) {
-    const response = await axios.post("http://localhost:3000/todoList", task);
-    commit("addNewTask", response.data);
+  async addTask({ dispatch }, task) {
+    await axios.post("http://localhost:3000/tasks", task);
+    dispatch("fetchTasks");
   },
-  async deleteTask({ commit, dispatch }, id) {
-    await axios.delete(`http://localhost:3000/todoList/${id}`);
-    commit("removeTask", id);
+  async deleteTask({ dispatch }, id) {
+    await axios.delete(`http://localhost:3000/tasks/${id}`);
     dispatch("fetchTasks");
   },
 };
 
 const mutations = {
   setList: (state, tasks) => (state.tasks = tasks),
-  addNewTask: (state, newTask) => state.tasks.unshift(newTask),
-  removeTask: (state, id) => state.tasks.filter((task) => task.id !== id),
 };
 
 export default {

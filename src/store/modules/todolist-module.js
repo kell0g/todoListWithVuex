@@ -10,24 +10,21 @@ const getters = {
 
 const actions = {
   async fetchTasks({ commit }) {
-    const response = await axios.get("http://localhost:3000/todoList");
+    const response = await axios.get("http://localhost:3000/tasks");
     commit("setList", response.data);
   },
-  async addTask({ commit }, task) {
-    const response = await axios.post("http://localhost:3000/todoList", task);
-    commit("addNewTask", response.data);
+  async addTask({ dispatch }, task) {
+    await axios.post("http://localhost:3000/tasks", task);
+    dispatch("fetchTasks");
   },
-  async deleteTask({ commit, dispatch }, id) {
-    await axios.delete(`http://localhost:3000/todoList/${id}`);
-    commit("removeTask", id);
+  async deleteTask({ dispatch }, id) {
+    await axios.delete(`http://localhost:3000/tasks/${id}`);
     dispatch("fetchTasks");
   },
 };
 
 const mutations = {
   setList: (state, tasks) => (state.tasks = tasks),
-  addNewTask: (state, newTask) => state.tasks.unshift(newTask),
-  removeTask: (state, id) => state.tasks.filter((task) => task.id !== id),
 };
 
 export default {
